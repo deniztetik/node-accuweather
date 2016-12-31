@@ -1,0 +1,29 @@
+{
+  "name": "node-accuweather",
+  "version": "1.0.0",
+  "description": "An node wrapper for the AccuWeather API",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/deniztetik/node-accuweather.git"
+  },
+  "keywords": [
+    "weather",
+    "accuweather",
+    "weather",
+    "node",
+    "weather",
+    "javascript",
+    "weather",
+    "api"
+  ],
+  "author": "Deniz Tetik <deniz.a.tetik@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/deniztetik/node-accuweather/issues"
+  },
+  "homepage": "https://github.com/deniztetik/node-accuweather#readme"
+}
