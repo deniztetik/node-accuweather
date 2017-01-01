@@ -12,7 +12,7 @@ Get your AccuWeather API Key at http://developer.accuweather.com/user/register.
 
 ```var accuweather = require('node-accuweather')()(YOUR_API_KEY);```
 
-### To Get Current Conditions Based on Keyword Location
+### To Get Current Weather Conditions Based on Keyword Location (In Farenheit)
 
 ```javascript
 accuweather.getNowWeatherAndRealFeel("New York")
