@@ -25,7 +25,6 @@ var accuweather = function accuweather() {
         };
         return request(params);
       }).then(function (body) {
-        console.log('got herrr');
         return {
           Temperature: JSON.parse(body)[0].Temperature.Imperial.Value,
           RealFeel: JSON.parse(body)[0].RealFeelTemperature.Imperial.Value
