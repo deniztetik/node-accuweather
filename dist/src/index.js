@@ -25,7 +25,7 @@ var accuweather = function accuweather() {
       });
     };
 
-    var getNowWeatherAndRealFeel = function getNowWeatherAndRealFeel(query) {
+    var getCurrentConditions = function getCurrentConditions(query) {
       return getLocationKey(query, API_KEY).then(function (key) {
         var params = {
           url: baseUrl + '/currentconditions/v1/' + key,
@@ -49,7 +49,7 @@ var accuweather = function accuweather() {
     };
 
     return {
-      getNowWeatherAndRealFeel: getNowWeatherAndRealFeel
+      getCurrentConditions: getCurrentConditions
     };
   };
 };

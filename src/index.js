@@ -16,7 +16,7 @@ const accuweather = () => {
         .catch(err => console.error(err))
     }
 
-    const getNowWeatherAndRealFeel = (query) => {
+    const getCurrentConditions = (query) => {
       return getLocationKey(query, API_KEY)
         .then(key => {
           const params = {
@@ -38,7 +38,7 @@ const accuweather = () => {
     }
 
     return {
-      getNowWeatherAndRealFeel: getNowWeatherAndRealFeel
+      getCurrentConditions: getCurrentConditions
     }
   }
 }
