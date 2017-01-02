@@ -12,12 +12,8 @@ const accuweather = () => {
         json: true
       }
       return request(params)
-        .then(([body,]) => {
-          return body.Key
-        })
-        .catch(err => {
-          console.error(err);
-        })
+        .then(([body,]) => body.Key)
+        .catch(err => console.error(err))
     }
 
     const getNowWeatherAndRealFeel = (query) => {
@@ -38,9 +34,7 @@ const accuweather = () => {
             Precipitation: body.Precip1hr.Imperial
           }
         })
-        .catch(err => {
-          if (err) console.error(err)
-        })
+        .catch(err => console.error(err))
     }
 
     return {

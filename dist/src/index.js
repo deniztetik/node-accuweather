@@ -21,7 +21,7 @@ var accuweather = function accuweather() {
 
         return body.Key;
       }).catch(function (err) {
-        console.error(err);
+        return console.error(err);
       });
     };
 
@@ -44,7 +44,7 @@ var accuweather = function accuweather() {
           Precipitation: body.Precip1hr.Imperial
         };
       }).catch(function (err) {
-        if (err) console.error(err);
+        return console.error(err);
       });
     };
 
