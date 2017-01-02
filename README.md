@@ -15,12 +15,16 @@ Get your AccuWeather API Key at http://developer.accuweather.com/user/register.
 ### To Get Current Weather Conditions Based on Keyword Location (In Farenheit)
 
 ```javascript
-accuweather.getNowWeatherAndRealFeel("New York")
+accuweather.getCurrentConditions("New York")
   .then(function(result) {
     console.log(result);
   });
 
-// { Temperature: 34, RealFeel: 29 }
+// { Summary: 'Cloudy',
+//   Temperature: 41,
+//   RealFeel: 29,
+//   Precipitation: { Value: 0.01, Unit: 'in', UnitType: 1 } }
+
 ```
 
 Note that this will return the "best match" result based on a keyword search, so New Yorks in other places besides the US won't return a result.
