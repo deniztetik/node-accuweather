@@ -21,11 +21,24 @@ accuweather.getCurrentConditions("New York")
   });
 
 // { Summary: 'Cloudy',
-//   Temperature: 41,
-//   RealFeel: 29,
-//   Precipitation: { Value: 0.01, Unit: 'in', UnitType: 1 } }
-
+//   Temperature: 61,
+//   RealFeel: 57,
+//   Precipitation: { Value: 0, Unit: 'in', UnitType: 1 } }
 ```
 
-Note that this will return the "best match" result based on a keyword search, so New Yorks in other places besides the US won't return a result.
+#### In Celsius
+
+```javascript
+accuweather.getCurrentConditions("New York", {unit: "Celsius"})
+  .then(function(result) {
+    console.log(result);
+  });
+
+//{ Summary: 'Cloudy',
+//  Temperature: 16.1,
+//  RealFeel: 14,
+//  Precipitation: { Value: 0, Unit: 'mm', UnitType: 3 } }
+```
+
+Note that this will return the "best match" result based on a keyword search, so "New York"s in other places besides the US won't return a result.
 

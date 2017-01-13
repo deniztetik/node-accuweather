@@ -16,7 +16,11 @@ const accuweather = () => {
         .catch(err => console.error(err))
     }
 
-    const getCurrentConditions = (query) => {
+    const getCurrentConditions = (query, options) => {
+      let unit = "Farenheit"
+      if (options) {
+        unit = options.unit
+      }
       return getLocationKey(query, API_KEY)
         .then(key => {
           const params = {
@@ -27,11 +31,20 @@ const accuweather = () => {
           return request(params)
         })
         .then(([body,]) => {
-          return {
-            Summary: body.WeatherText,
-            Temperature: body.Temperature.Imperial.Value,
-            RealFeel: body.RealFeelTemperature.Imperial.Value,
-            Precipitation: body.Precip1hr.Imperial
+          if (unit == "Farenheit") {
+            return {
+              Summary: body.WeatherText,
+              Temperature: body.Temperature.Imperial.Value,
+              RealFeel: body.RealFeelTemperature.Imperial.Value,
+              Precipitation: body.Precip1hr.Imperial
+            }
+          } else {
+            return {
+              Summary: body.WeatherText,
+              Temperature: body.Temperature.Metric.Value,
+              RealFeel: body.RealFeelTemperature.Metric.Value,
+              Precipitation: body.Precip1hr.Metric
+            }
           }
         })
         .catch(err => console.error(err))

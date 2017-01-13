@@ -25,7 +25,11 @@ var accuweather = function accuweather() {
       });
     };
 
-    var getCurrentConditions = function getCurrentConditions(query) {
+    var getCurrentConditions = function getCurrentConditions(query, options) {
+      var unit = "Farenheit";
+      if (options) {
+        unit = options.unit;
+      }
       return getLocationKey(query, API_KEY).then(function (key) {
         var params = {
           url: baseUrl + '/currentconditions/v1/' + key,
@@ -37,12 +41,21 @@ var accuweather = function accuweather() {
         var _ref4 = _slicedToArray(_ref3, 1),
             body = _ref4[0];
 
-        return {
-          Summary: body.WeatherText,
-          Temperature: body.Temperature.Imperial.Value,
-          RealFeel: body.RealFeelTemperature.Imperial.Value,
-          Precipitation: body.Precip1hr.Imperial
-        };
+        if (unit == "Farenheit") {
+          return {
+            Summary: body.WeatherText,
+            Temperature: body.Temperature.Imperial.Value,
+            RealFeel: body.RealFeelTemperature.Imperial.Value,
+            Precipitation: body.Precip1hr.Imperial
+          };
+        } else {
+          return {
+            Summary: body.WeatherText,
+            Temperature: body.Temperature.Metric.Value,
+            RealFeel: body.RealFeelTemperature.Metric.Value,
+            Precipitation: body.Precip1hr.Metric
+          };
+        }
       }).catch(function (err) {
         return console.error(err);
       });
