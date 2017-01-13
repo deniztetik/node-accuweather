@@ -3,3 +3,5 @@ node_modules/
 npm-debug.log
 src/config.js
 src/test.js
+dist/src/test.js
+dist/src/test.js.map
