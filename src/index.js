@@ -4,24 +4,26 @@ const accuweather = () => {
   return (API_KEY) => {
     const baseUrl = 'http://dataservice.accuweather.com'
 
-    // Gets the AccuWeather-specific location key so that a query can be made to get the weather
-    const getLocationKey = (query) => {
+    // Queries all location keys based on keyword search
+    const queryLocations = query => {
       const params = {
         url: baseUrl + '/locations/v1/cities/autocomplete',
         qs: {apikey: API_KEY, q: query},
         json: true
       }
       return request(params)
-        .then(([body,]) => body.Key)
+        .then(resp => resp)
         .catch(err => console.error(err))
     }
 
+    // Gets the first result for AccuWeather-specific location keys so that a query can be made to get the weather
+    const getFirstLocationKey = query => queryLocations(query)
+        .then(([body,]) => body.Key)
+        .catch(err => console.error(err))
+
     const getCurrentConditions = (query, options) => {
-      let unit = "Farenheit"
-      if (options) {
-        unit = options.unit
-      }
-      return getLocationKey(query, API_KEY)
+      const unit = options ? options.unit : "Farenheit"
+      return getFirstLocationKey(query, API_KEY)
         .then(key => {
           const params = {
             url: baseUrl + '/currentconditions/v1/' + key,
@@ -51,6 +53,7 @@ const accuweather = () => {
     }
 
     return {
+      queryLocations: queryLocations,
       getCurrentConditions: getCurrentConditions
     }
   }

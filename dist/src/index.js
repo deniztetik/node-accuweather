@@ -8,14 +8,23 @@ var accuweather = function accuweather() {
   return function (API_KEY) {
     var baseUrl = 'http://dataservice.accuweather.com';
 
-    // Gets the AccuWeather-specific location key so that a query can be made to get the weather
-    var getLocationKey = function getLocationKey(query) {
+    // Queries all location keys based on keyword search
+    var queryLocations = function queryLocations(query) {
       var params = {
         url: baseUrl + '/locations/v1/cities/autocomplete',
         qs: { apikey: API_KEY, q: query },
         json: true
       };
-      return request(params).then(function (_ref) {
+      return request(params).then(function (resp) {
+        return resp;
+      }).catch(function (err) {
+        return console.error(err);
+      });
+    };
+
+    // Gets the first result for AccuWeather-specific location keys so that a query can be made to get the weather
+    var getFirstLocationKey = function getFirstLocationKey(query) {
+      return queryLocations(query).then(function (_ref) {
         var _ref2 = _slicedToArray(_ref, 1),
             body = _ref2[0];
 
@@ -26,11 +35,8 @@ var accuweather = function accuweather() {
     };
 
     var getCurrentConditions = function getCurrentConditions(query, options) {
-      var unit = "Farenheit";
-      if (options) {
-        unit = options.unit;
-      }
-      return getLocationKey(query, API_KEY).then(function (key) {
+      var unit = options ? options.unit : "Farenheit";
+      return getFirstLocationKey(query, API_KEY).then(function (key) {
         var params = {
           url: baseUrl + '/currentconditions/v1/' + key,
           qs: { apikey: API_KEY, details: true },
@@ -62,6 +68,7 @@ var accuweather = function accuweather() {
     };
 
     return {
+      queryLocations: queryLocations,
       getCurrentConditions: getCurrentConditions
     };
   };
