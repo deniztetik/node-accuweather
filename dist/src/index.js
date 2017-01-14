@@ -36,7 +36,10 @@ var accuweather = function accuweather() {
 
     var getCurrentConditions = function getCurrentConditions(query, options) {
       var unit = options ? options.unit : "Farenheit";
-      return getFirstLocationKey(query, API_KEY).then(function (key) {
+      // If query is a string, then do a keyword search and return the most relevant result's location key.
+      // If query is a number (it is the location Key) then use that key
+      var locationKey = typeof query === 'string' ? getFirstLocationKey(query, API_KEY) : Promise.resolve(query);
+      return locationKey.then(function (key) {
         var params = {
           url: baseUrl + '/currentconditions/v1/' + key,
           qs: { apikey: API_KEY, details: true },
