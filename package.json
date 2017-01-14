@@ -1,6 +1,6 @@
 {
   "name": "node-accuweather",
-  "version": "1.6.1",
+  "version": "1.6.2",
   "description": "An node wrapper for the AccuWeather API",
   "main": "dist/src/index.js",
   "scripts": {
