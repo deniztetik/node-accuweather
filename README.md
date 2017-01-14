@@ -112,7 +112,7 @@ accuweather.queryLocations("New York").then(function(result) {
 Once you have your location key, you can get the current conditions based on that.
 ```javascript
 // Using location key for New York, NY
-accuweather.getCurrentConditions(349727)
+accuweather.getCurrentConditions("349727") // can be type string or Number
   .then(function(result) {
     console.log(result);
   });
