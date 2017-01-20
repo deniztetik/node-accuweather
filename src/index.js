@@ -18,15 +18,38 @@ const accuweather = () => {
 
     // Gets the first result for AccuWeather-specific location keys so that a query can be made to get the weather
     const getFirstLocationKey = query => queryLocations(query)
-        .then(([body,]) => body.Key)
+        .then(([body,]) => body ? body.Key : undefined)
         .catch(err => console.error(err))
 
+    // Gets location key from object containing { lat: Number, long: Number }
+    // const getGeoLocation = ({lat, long}) => {
+    //   const queryString = lat.toString() + ', ' + long.toString()
+    //   const params = {
+    //     url: baseUrl + '/locations/v1/cities/geoposition/search',
+    //     qs {apikey: API_KEY, q: queryString},
+    //     json: true
+    //   }
+    //   return request(params)
+    //     .then(resp => resp)
+    //     .catch(err => console.error(err))
+    // }
+
+    /*
+    Takes string of keyword, string/number of location key,
+    or object containing {lat: Number, long: Number}
+     */
     const getCurrentConditions = (query, options) => {
+      if ((typeof query !== 'string' && typeof query !== 'number')
+        || Array.isArray(query)) {
+        throw new TypeError('Query argument should be string, number, or object, instead received ' + typeof query)
+      }
+
       const unit = options ? options.unit : "Farenheit"
       // If query is a string, then do a keyword search and return the most relevant result's location key.
       // If query is a number (it is the location Key) then use that key
-      const locationKey = isNaN(query) ? getFirstLocationKey(query, API_KEY) : Promise.resolve(parseInt(query))
+      const locationKey = isNaN(query) ? getFirstLocationKey(query) : Promise.resolve(parseInt(query))
       return locationKey
+        .then(key => key ? key : Promise.reject('No result found for query'))
         .then(key => {
           const params = {
             url: baseUrl + '/currentconditions/v1/' + key,
@@ -55,9 +78,13 @@ const accuweather = () => {
         .catch(err => console.error(err))
     }
 
+    // getGeoLocation({lat: 40.7128, long: -74.0059})
+    //   .then(result => console.log(result))
+
     return {
-      queryLocations: queryLocations,
-      getCurrentConditions: getCurrentConditions
+      // getGeoLocation,
+      queryLocations,
+      getCurrentConditions
     }
   }
 }

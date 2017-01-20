@@ -1,5 +1,7 @@
 'use strict';
 
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
 var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 
 var request = require('request-promise');
@@ -28,18 +30,41 @@ var accuweather = function accuweather() {
         var _ref2 = _slicedToArray(_ref, 1),
             body = _ref2[0];
 
-        return body.Key;
+        return body ? body.Key : undefined;
       }).catch(function (err) {
         return console.error(err);
       });
     };
 
+    // Gets location key from object containing { lat: Number, long: Number }
+    // const getGeoLocation = ({lat, long}) => {
+    //   const queryString = lat.toString() + ', ' + long.toString()
+    //   const params = {
+    //     url: baseUrl + '/locations/v1/cities/geoposition/search',
+    //     qs {apikey: API_KEY, q: queryString},
+    //     json: true
+    //   }
+    //   return request(params)
+    //     .then(resp => resp)
+    //     .catch(err => console.error(err))
+    // }
+
+    /*
+    Takes string of keyword, string/number of location key,
+    or object containing {lat: Number, long: Number}
+     */
     var getCurrentConditions = function getCurrentConditions(query, options) {
+      if (typeof query !== 'string' && typeof query !== 'number' || Array.isArray(query)) {
+        throw new TypeError('Query argument should be string, number, or object, instead received ' + (typeof query === 'undefined' ? 'undefined' : _typeof(query)));
+      }
+
       var unit = options ? options.unit : "Farenheit";
       // If query is a string, then do a keyword search and return the most relevant result's location key.
       // If query is a number (it is the location Key) then use that key
-      var locationKey = isNaN(query) ? getFirstLocationKey(query, API_KEY) : Promise.resolve(parseInt(query));
+      var locationKey = isNaN(query) ? getFirstLocationKey(query) : Promise.resolve(parseInt(query));
       return locationKey.then(function (key) {
+        return key ? key : Promise.reject('No result found for query');
+      }).then(function (key) {
         var params = {
           url: baseUrl + '/currentconditions/v1/' + key,
           qs: { apikey: API_KEY, details: true },
@@ -70,7 +95,11 @@ var accuweather = function accuweather() {
       });
     };
 
+    // getGeoLocation({lat: 40.7128, long: -74.0059})
+    //   .then(result => console.log(result))
+
     return {
+      // getGeoLocation,
       queryLocations: queryLocations,
       getCurrentConditions: getCurrentConditions
     };
