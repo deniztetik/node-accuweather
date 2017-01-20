@@ -37,31 +37,36 @@ var accuweather = function accuweather() {
     };
 
     // Gets location key from object containing { lat: Number, long: Number }
-    // const getGeoLocation = ({lat, long}) => {
-    //   const queryString = lat.toString() + ', ' + long.toString()
-    //   const params = {
-    //     url: baseUrl + '/locations/v1/cities/geoposition/search',
-    //     qs {apikey: API_KEY, q: queryString},
-    //     json: true
-    //   }
-    //   return request(params)
-    //     .then(resp => resp)
-    //     .catch(err => console.error(err))
-    // }
+    var getGeoLocation = function getGeoLocation(_ref3) {
+      var lat = _ref3.lat,
+          long = _ref3.long;
+
+      var queryString = lat.toString() + ', ' + long.toString();
+      var params = {
+        url: baseUrl + '/locations/v1/cities/geoposition/search',
+        qs: { apikey: API_KEY, q: queryString },
+        json: true
+      };
+      return request(params).then(function (resp) {
+        return resp.Key;
+      }).catch(function (err) {
+        return console.error(err);
+      });
+    };
 
     /*
     Takes string of keyword, string/number of location key,
     or object containing {lat: Number, long: Number}
      */
     var getCurrentConditions = function getCurrentConditions(query, options) {
-      if (typeof query !== 'string' && typeof query !== 'number' || Array.isArray(query)) {
+      if (typeof query !== 'string' && typeof query !== 'number' && (typeof query === 'undefined' ? 'undefined' : _typeof(query)) !== 'object' || Array.isArray(query)) {
         throw new TypeError('Query argument should be string, number, or object, instead received ' + (typeof query === 'undefined' ? 'undefined' : _typeof(query)));
       }
 
       var unit = options ? options.unit : "Farenheit";
       // If query is a string, then do a keyword search and return the most relevant result's location key.
       // If query is a number (it is the location Key) then use that key
-      var locationKey = isNaN(query) ? getFirstLocationKey(query) : Promise.resolve(parseInt(query));
+      var locationKey = (typeof query === 'undefined' ? 'undefined' : _typeof(query)) === 'object' ? getGeoLocation(query) : isNaN(query) ? getFirstLocationKey(query) : Promise.resolve(parseInt(query));
       return locationKey.then(function (key) {
         return key ? key : Promise.reject('No result found for query');
       }).then(function (key) {
@@ -71,9 +76,9 @@ var accuweather = function accuweather() {
           json: true
         };
         return request(params);
-      }).then(function (_ref3) {
-        var _ref4 = _slicedToArray(_ref3, 1),
-            body = _ref4[0];
+      }).then(function (_ref4) {
+        var _ref5 = _slicedToArray(_ref4, 1),
+            body = _ref5[0];
 
         if (unit == "Farenheit") {
           return {
@@ -95,11 +100,7 @@ var accuweather = function accuweather() {
       });
     };
 
-    // getGeoLocation({lat: 40.7128, long: -74.0059})
-    //   .then(result => console.log(result))
-
     return {
-      // getGeoLocation,
       queryLocations: queryLocations,
       getCurrentConditions: getCurrentConditions
     };
